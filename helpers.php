@@ -6,7 +6,7 @@
  */
 function basePath($path = '') 
 {
-  return __DIR__  . '/' . $path;
+  return __DIR__  . '/' . $path; //mengembalikan path setelah/ menjadi tidak ada atau ''
 }
 
 /**
