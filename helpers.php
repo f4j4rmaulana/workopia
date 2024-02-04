@@ -82,4 +82,15 @@ function formatSalary($salary) {
   $formattedSalary = 'Rp. ' . number_format($salary, 2, '.', ',');
   return $formattedSalary;
 }
+
+/**
+ * Format Datetime
+ * 
+ * @param $date
+ * @return string $formattedDate
+ */
+function formatDate($date) {
+  $formattedDate = date_format(date_create($date), 'd-m-Y h:i:s');
+  return $formattedDate;
+}
 ?>

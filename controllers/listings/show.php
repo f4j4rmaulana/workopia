@@ -10,5 +10,13 @@ $params = [
 
 $listing = $db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
 
-loadView('listings/show');
+
+
+if ($listing) {
+  loadView('listings/show', ['listing' => $listing]);
+} else {
+  // loadView('error/404');
+  $router = new Router();
+  $router->error();
+}
 ?>
