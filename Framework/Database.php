@@ -47,5 +47,59 @@ class Database {
       throw new Exception("Query failed to execute: {$e->getMessage()}");
     }
   }
+
+  /**
+     * Query the database with SHARE LOCK
+     * 
+     * @param string $query
+     * @param array $params
+     * 
+     * @return PDOStatement
+     * @throws Exception
+     */
+    public function queryWithShareLock($query, $params = []) {
+      try {
+          $this->conn->beginTransaction();
+
+          // Set SHARE LOCK
+          $query .= ' FOR SHARE';
+
+          $sth = $this->query($query, $params);
+
+          $this->conn->commit();
+
+          return $sth;
+      } catch (Exception $e) {
+          $this->conn->rollBack();
+          throw new Exception($e->getMessage());
+      }
+  }
+
+  /**
+   * Query the database with EXCLUSIVE LOCK
+   * 
+   * @param string $query
+   * @param array $params
+   * 
+   * @return PDOStatement
+   * @throws Exception
+   */
+  public function queryWithExclusiveLock($query, $params = []) {
+      try {
+          $this->conn->beginTransaction();
+
+          // Set EXCLUSIVE LOCK
+          $query .= ' FOR UPDATE';
+
+          $sth = $this->query($query, $params);
+
+          $this->conn->commit();
+
+          return $sth;
+      } catch (Exception $e) {
+          $this->conn->rollBack();
+          throw new Exception($e->getMessage());
+      }
+  }
 }
 ?>

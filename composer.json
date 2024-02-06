@@ -1,0 +1,16 @@
+{
+  "name": "f4j4rmaulana/workopia.php",
+  "description": "Job Listing App",
+  "authors": [
+    {
+    "name": "Fajar Maulana",
+    "email": "f4j4rmaulana@gmail.com"
+  }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Framework\\": "Framework/",
+      "App\\": "App/"
+    }
+  }
+}

@@ -8,7 +8,7 @@ $params = [
   'id' => $id
 ];
 
-$listing = $db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+$listing = $db->queryWithShareLock('SELECT * FROM listings WHERE id = :id', $params)->fetch();
 
 
 
