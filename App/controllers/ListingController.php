@@ -48,9 +48,9 @@ class ListingController {
    *
    * @return void
    */
-  public function show() 
+  public function show($params) 
   {
-    $id = $_GET['id'] ?? '';
+    $id = $params['id'] ?? '';
 
     $params = [
       'id' => $id
@@ -61,11 +61,12 @@ class ListingController {
     /**
      * Error if id listings not found
      */
-    if ($listing) {
-      loadView('listings/show', ['listing' => $listing]);
+    if (!$listing) {
+      ErrorController::notFound('Listings not found');
+      
     } else {
       // loadView('error/404');
-      ErrorController::notFound();
+      loadView('listings/show', ['listing' => $listing]);
     }
   }
 }
