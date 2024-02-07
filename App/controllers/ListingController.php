@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use Framework\Database;
-use Framework\Router;
+
 
 class ListingController {
 
@@ -16,6 +16,11 @@ class ListingController {
 
   }
 
+  /**
+   * Show all listings
+   *
+   * @return void
+   */
   public function index() 
   {
     $listings = $this->db->queryWithShareLock('SELECT * FROM listings')->fetchAll();
@@ -28,11 +33,21 @@ class ListingController {
     ]);
   }
 
+  /**
+   * Create a listings
+   *
+   * @return void
+   */
   public function create() 
   {
     loadView('listings/create');
   }
 
+  /**
+   * Show detail listing
+   *
+   * @return void
+   */
   public function show() 
   {
     $id = $_GET['id'] ?? '';
@@ -50,8 +65,7 @@ class ListingController {
       loadView('listings/show', ['listing' => $listing]);
     } else {
       // loadView('error/404');
-      $router = new Router();
-      $router->error();
+      ErrorController::notFound();
     }
   }
 }

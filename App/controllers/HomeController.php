@@ -15,6 +15,12 @@ class HomeController {
 
   }
 
+
+  /**
+   * Show all listings with limit 6
+   *
+   * @return void
+   */
   public function index() 
   {
     $listings = $this->db->queryWithShareLock('SELECT * FROM listings LIMIT 6')->fetchAll();
