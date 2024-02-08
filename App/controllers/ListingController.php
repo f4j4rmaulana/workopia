@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use Framework\Database;
-
+use Framework\Validation;
 
 class ListingController {
 
@@ -23,6 +23,7 @@ class ListingController {
    */
   public function index() 
   {
+
     $listings = $this->db->queryWithShareLock('SELECT * FROM listings')->fetchAll();
 
   // inspect($listings); tes
