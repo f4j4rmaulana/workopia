@@ -93,4 +93,14 @@ function formatDate($date) {
   $formattedDate = date_format(date_create($date), 'd-m-Y h:i:s');
   return $formattedDate;
 }
+
+/**
+   * Sanitize Data
+   * 
+   * @param string $dirty
+   * @return string
+   */
+  function sanitize($dirty) {
+    return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
+  }
 ?>

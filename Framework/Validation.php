@@ -41,7 +41,6 @@ namespace Framework;
       $value2 = trim($value2);
       return $value1 === $value2;
     }
-
   }
 
 ?>
