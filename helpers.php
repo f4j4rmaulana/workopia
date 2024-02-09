@@ -103,4 +103,15 @@ function formatDate($date) {
   function sanitize($dirty) {
     return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
   }
+
+  /**
+   * Redirect page
+   * 
+   * @param string $url
+   * @return void
+   */
+  function redirect($url) {
+    header("location: {$url}");
+    exit;
+  }
 ?>

@@ -39,19 +39,29 @@ class Database {
    * @throws PDOException
    */
   public function query($query, $params = []) {
-    try {
+    try {        // Mulai transaksi
+      $this->conn->beginTransaction();
+
       $sth = $this->conn->prepare($query);
-      
+
       // Bind Params name
       foreach($params as $param => $value) {
-        $sth->bindValue(':' . $param, $value);
+          $sth->bindValue(':' . $param, $value);
       }
 
       $sth->execute();
+
+      // Commit transaksi
+      $this->conn->commit();
+
       return $sth;
-    } catch (PDOException $e) {
-      throw new Exception("Query failed to execute: {$e->getMessage()}");
+  } catch (PDOException $e) {
+      // Rollback transaksi jika terjadi kesalahan
+      if ($this->conn->inTransaction()) {
+        $this->conn->rollBack();
     }
+      throw new Exception("Query failed to execute: {$e->getMessage()}");
+  }
   }
 
   /**
@@ -65,18 +75,25 @@ class Database {
      */
     public function queryWithShareLock($query, $params = []) {
       try {
-          $this->conn->beginTransaction();
+        $this->conn->beginTransaction();
 
-          // Set SHARE LOCK
-          $query .= ' FOR SHARE';
-
-          $sth = $this->query($query, $params);
-
-          $this->conn->commit();
-
-          return $sth;
+        $sth = $this->conn->prepare($query);
+  
+        // Bind Params name
+        foreach($params as $param => $value) {
+            $sth->bindValue(':' . $param, $value);
+        }
+  
+        $sth->execute();
+  
+        // Commit transaksi
+        $this->conn->commit();
+  
+        return $sth;
       } catch (Exception $e) {
+        if ($this->conn->inTransaction()) {
           $this->conn->rollBack();
+      }
           throw new Exception($e->getMessage());
       }
   }
@@ -92,18 +109,25 @@ class Database {
    */
   public function queryWithExclusiveLock($query, $params = []) {
       try {
-          $this->conn->beginTransaction();
+        $this->conn->beginTransaction();
 
-          // Set EXCLUSIVE LOCK
-          $query .= ' FOR UPDATE';
-
-          $sth = $this->query($query, $params);
-
-          $this->conn->commit();
-
-          return $sth;
+        $sth = $this->conn->prepare($query);
+  
+        // Bind Params name
+        foreach($params as $param => $value) {
+            $sth->bindValue(':' . $param, $value);
+        }
+  
+        $sth->execute();
+  
+        // Commit transaksi
+        $this->conn->commit();
+  
+        return $sth;
       } catch (Exception $e) {
+        if ($this->conn->inTransaction()) {
           $this->conn->rollBack();
+      }
           throw new Exception($e->getMessage());
       }
   }
