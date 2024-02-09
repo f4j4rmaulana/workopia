@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ErrorController;
 use Framework\Database;
 use Framework\Router;
 
@@ -22,7 +23,6 @@ if ($listing) {
   loadView('listings/show', ['listing' => $listing]);
 } else {
   // loadView('error/404');
-  $router = new Router();
-  $router->error();
+ErrorController::notFound();
 }
 ?>

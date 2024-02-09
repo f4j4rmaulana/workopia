@@ -47,6 +47,7 @@ class ListingController {
   /**
    * Show detail listing
    *
+   * @param array $params
    * @return void
    */
   public function show($params) 
@@ -107,6 +108,13 @@ class ListingController {
 
       $fields = [];
 
+      /* Kalau gunakan array reduce dan keys
+      $fields = array_reduce(array_keys($newListingData), function ($carry, $field) {
+        return $carry !== '' ? $carry . ', ' . $field : $field;
+        }, '');
+
+      */
+
       foreach($newListingData as $field => $value) {
         $fields[] = $field;
       }
@@ -127,6 +135,30 @@ class ListingController {
 
       $this->db->query($query, $newListingData);
       redirect('/listings');
+    }
   }
+
+  /**
+   * Delete a listing
+   * 
+   * @param array $params
+   * @return void
+   */
+  public function destroy($params) {
+    $id = $params['id'];
+
+    $params = [
+      'id' => $id
+    ];
+
+    $listing = $this->db->queryWithShareLock('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+    
+    if(!$listing) {
+      ErrorController::notFound('Listing not found');
+      return;
+    } 
+      $this->db->queryWithShareLock('DELETE FROM listings WHERE id = :id', $params);
+
+      redirect('/listings');
   }
 }
