@@ -41,7 +41,7 @@ class UserController {
     $name = $_POST['name'];
     $email= $_POST['email'];
     $city = $_POST['city'];
-    $state = $_POST['state'];
+    $province = $_POST['province'];
     $password = $_POST['password'];
     $passwordConfirmation = $_POST['password_confirmation'];
 
@@ -68,14 +68,39 @@ class UserController {
           'name' => $name,
           'email' => $email,
           'city' => $city,
-          'state' => $state
+          'province' => $province
         ]
         ]);
         exit;
-    } else {
-      inspectAndDie('store');
+    } 
+
+    // Check if email exist
+    $params = [
+      'email' => $email
+    ];
+
+    $user = $this->db->queryWithShareLock('SELECT * FROM users WHERE email = :email', $params)->fetch();
+
+    if($user) {
+      $errors['email'] = 'Email already exists';
+      loadView('users/register', [
+        'errors' => $errors
+      ]);
+      exit;
     }
 
+    // Create user account
+    $params = [
+      'name' => $name,
+      'email' => $email,
+      'city' => $city,
+      'province' => $province,
+      'password' => password_hash($password, PASSWORD_DEFAULT),
+    ];
+
+    $this->db->query('INSERT INTO users (name, email, city, province, password) VALUES (:name, :email, :city, :province, :password)',$params);
+
+    redirect('/');
   }
 }
 ?>
