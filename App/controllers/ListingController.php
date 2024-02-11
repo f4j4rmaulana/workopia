@@ -285,4 +285,29 @@ class ListingController {
       redirect('/listings/' . $id);
     }
   }
+
+  /**
+   * Search listings by keyword/location
+   * 
+   * @return void
+   */
+  public function search() {
+    $keywords = isset($_GET['keywords']) ? trim($_GET['keywords']) : '';
+    $location = isset($_GET['location']) ? trim($_GET['location']) : '';
+
+    $query = "SELECT * FROM listings WHERE (LOWER(title) LIKE LOWER(:keywords) OR LOWER(description) LIKE LOWER(:keywords) OR LOWER(company) LIKE LOWER(:keywords) OR LOWER(tags) LIKE LOWER(:keywords)) AND LOWER(city) LIKE LOWER(:location) OR LOWER(province) LIKE LOWER(:location)";
+
+    $params = [
+      'keywords' => "%{$keywords}%",
+      'location' => "%{$location}%" 
+    ];
+
+    $listings = $this->db->queryWithShareLock($query, $params)->fetchAll();
+
+    loadView('/listings/index',[
+      'listings' => $listings,
+      'keywords' => $keywords,
+      'location' => $location
+    ]);
+  }
 }
