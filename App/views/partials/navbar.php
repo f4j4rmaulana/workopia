@@ -10,11 +10,11 @@
         </h1>
         <nav class="space-x-4">
           <?php if(Session::has('user')): ?>
-            <div class="flex justify-between items-center gap-4">
+            <div class="flex justify-between items-center gap-4 ">
               <div>
                 Welcome <?= Session::get('user')['name']?>
               </div>
-              <form>
+              <form method="POST" action="/auth/logout">
                 <button type="submit" class="text-white inline hover:underline">Logout</button>
               </form>
               <a
