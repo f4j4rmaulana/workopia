@@ -200,7 +200,11 @@ class ListingController {
     if (!$listing) {
       ErrorController::notFound('Listings not found');
       return;
-      
+    }
+
+    if(!Authorization::isOwner($listing->user_id)) {
+      Session::setFlashMessage('error_message', 'You\'re not authorized to update this listing');
+      return redirect('/listings/' . $listing->id);
     }
 
       // loadView('error/404');
@@ -229,6 +233,12 @@ class ListingController {
     if (!$listing) {
       ErrorController::notFound('Listings not found');
       return;
+    }
+
+    // Authorization
+    if(!Authorization::isOwner($listing->user_id)) {
+      Session::setFlashMessage('error_message', 'You\'re not authorized to update this listing');
+      return redirect('/listings/' . $listing->id);
     }
     
     $allowedFields = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'city', 'province', 'phone', 'email'];
